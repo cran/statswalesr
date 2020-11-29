@@ -11,41 +11,62 @@
 #' dataset in a dataframe. If the id is not valid, the function will return
 #' an error.
 #' @examples
+#' \dontrun{
 #' data <- statswales_get_dataset("hlth0515")
+#'}
 #'
 #' @importFrom rlang .data
 #' @export
 
 statswales_get_dataset <- function(id, print_progress = FALSE) {
 
-  stopifnot('id should be a string'       = is.character(id),
-            'id should be a single value' = length(id) == 1
+  stopifnot('Dataset id must be a string'       = is.character(id),
+            'Dataset id should be a single value' = length(id) == 1
   )
+
+  # Check for internet connection --------------------------------------------
+
+  if (!curl::has_internet()) {
+    message("No internet connection found.")
+    return(NULL)
+  }
 
   # Define dataset URL --------------------------------------------------------
 
   url <- paste0("http://open.statswales.gov.wales/en-gb/dataset/", tolower(id))
 
-  # Extract first page and add dataframe to list ------------------------------
+  # Define user agent ----------------------------------------------------
 
-  json_data <- try(jsonlite::fromJSON(txt = url))
+  ua <- httr::user_agent("https://github.com/jamie-ralph/statswalesr")
 
-  # A returned list means the dataset has been found
+  # Check that dataset resource is available ------------------------------
+  request <- httr::GET(url, ua)
 
-  if (class(json_data) == "list") {
+  if (httr::http_error(request)) {
 
-    json_list = list(json_data$value)
+    message("Dataset was not found. Check your dataset id for typos. If your dataset id is correct, the API might be unavailable.")
 
-  } else {
+    return(NULL)
 
-    stop("Dataset was not found. Check your dataset id for typos and that
-         you have an internet connection.") }
+  }
+  else {
+    message("Downloading StatsWales dataset...")
+  }
+
+  # Extract first page of data and add to a list object --------------------
+
+  json_data <- jsonlite::fromJSON(httr::content(request, "text"))
+
+  json_list = list(json_data$value)
+
 
 
   # Loop through odata links to get all data --------------------------------
   i = 0
 
   while ("odata.nextLink" %in% names(json_data)) {
+
+    # Print progress
 
     if(print_progress == TRUE) {
 
@@ -55,7 +76,23 @@ statswales_get_dataset <- function(id, print_progress = FALSE) {
 
     }
 
-    json_data <- jsonlite::fromJSON(txt = json_data$odata.nextLink)
+    # Request data from next page
+
+    next_page_request <- httr::GET(json_data$odata.nextLink, ua)
+
+    # If next page cannot be accessed, exit function
+
+    if (httr::http_error(next_page_request)) {
+
+      message("Could not download this dataset. The API might be unavailable.")
+
+      return(NULL)
+
+    }
+
+    # Extract data and append to main list object
+
+    json_data <- jsonlite::fromJSON(httr::content(next_page_request, "text"))
 
     json_list <- c(json_list, list(json_data$value))
 

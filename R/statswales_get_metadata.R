@@ -13,20 +13,38 @@
 #' @export
 statswales_get_metadata <- function(id) {
 
-  stopifnot("Only one id should be passed to statswales_get_metadata" = length(id) == 1,
-            "Dataset id must be a string"                             = is.character(id))
+  stopifnot("Dataset id should be a single value" = length(id) == 1,
+            "Dataset id must be a string" = is.character(id))
 
-  # Define url containing metadata in JSON format
+  # Check for internet connection --------------------------------------------
+
+  if (!curl::has_internet()) {
+    message("No internet connection found.")
+    return(NULL)
+  }
+
+  # Define url containing metadata in JSON format --------------------------
   url <- paste0("http://open.statswales.gov.wales/en-gb/discover/metadata?$filter=Dataset%20eq%20%27",
                 tolower(id), "%27")
 
-  # Extract metadata
-  json_data <- jsonlite::fromJSON(url)
+  # Extract metadata list ----------------------------------------------------
+  ua <- httr::user_agent("https://github.com/jamie-ralph/statswalesr")
 
-  # Extract metadata dataframe
+  request <- httr::GET(url, ua)
+
+  json_data <- jsonlite::fromJSON(httr::content(request, "text"))
+
+  # Check that metadata has been returned ---------------------------------
+  if (length(json_data$value) < 1) {
+    message("Metadata was not found. Check your dataset id for typos. If your dataset id is correct, the API might be unavailable.")
+
+    return(NULL)
+  }
+
+  # Extract metadata dataframe --------------------------------------------
   metadata <- json_data$value
 
-  # Return metadata
+  # Return metadata ------------------------------------------------------
   metadata
 }
 
