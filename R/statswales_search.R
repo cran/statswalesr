@@ -10,6 +10,8 @@
 #' @examples
 #' crops_datasets <- statswales_search("*crops*")
 #'
+#'
+#'
 #' @importFrom rlang .data
 #' @export
 statswales_search <- function(search_text) {

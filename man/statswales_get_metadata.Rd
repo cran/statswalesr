@@ -21,4 +21,5 @@ If the dataset id is valid, the output will be
 \examples{
 metadata <- statswales_get_metadata("hlth0515")
 
+
 }

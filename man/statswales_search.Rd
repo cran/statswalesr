@@ -20,4 +20,6 @@ text input.
 \examples{
 crops_datasets <- statswales_search("*crops*")
 
+
+
 }

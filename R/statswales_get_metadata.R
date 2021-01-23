@@ -10,6 +10,7 @@
 #' @examples
 #' metadata <- statswales_get_metadata("hlth0515")
 #'
+#'
 #' @export
 statswales_get_metadata <- function(id) {
 
@@ -31,6 +32,18 @@ statswales_get_metadata <- function(id) {
   ua <- httr::user_agent("https://github.com/jamie-ralph/statswalesr")
 
   request <- httr::GET(url, ua)
+
+  # Check request status
+
+  if (httr::http_error(request)) {
+
+    message("Metadata was not found. The API might be unavailable.")
+
+    return(NULL)
+
+  }
+
+  # Extract data from request object
 
   json_data <- jsonlite::fromJSON(httr::content(request, "text"))
 
