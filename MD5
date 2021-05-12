@@ -1,10 +1,10 @@
-5b24f079a9a865b5ab5a00432313693a *DESCRIPTION
+dfd2e69887468d19c785eb43436c0990 *DESCRIPTION
 1ca8ec7eced9852f770785cd13de907b *LICENSE
 312bd88932423b1673417b77b24cfee2 *NAMESPACE
-dc0f4f14d500e07fbd10b0cc9eb58bc3 *NEWS.md
-83c95e1fd7a5d69534d0186c60766e70 *R/statswales_get_dataset.R
-faf8c054e0e6411c8a972f8de8dda431 *R/statswales_get_metadata.R
-f707c601cd994606b1feb841dec8a1ae *R/statswales_search.R
+e53fa90d66dfdce9aca647f6bb214d9e *NEWS.md
+80c68b6d7d421d336fbb9a128b8ba6d6 *R/statswales_get_dataset.R
+3f68ae25f7feab41a08a0f67da1ca4ca *R/statswales_get_metadata.R
+3c8fd0e48206bb3ab1a37073271dda90 *R/statswales_search.R
 edfbd0b6c998f771256bf60d479da7d5 *README.md
 78846a495d8dbd858e5077cbaf3236cf *man/statswales_get_dataset.Rd
 66492b0586326f1b9bd509f91cc2840f *man/statswales_get_metadata.Rd
