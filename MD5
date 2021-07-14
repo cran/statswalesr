@@ -1,7 +1,7 @@
-dfd2e69887468d19c785eb43436c0990 *DESCRIPTION
+a6da4fc33eec85459d61349ff4e14cca *DESCRIPTION
 1ca8ec7eced9852f770785cd13de907b *LICENSE
 312bd88932423b1673417b77b24cfee2 *NAMESPACE
-e53fa90d66dfdce9aca647f6bb214d9e *NEWS.md
+011aa6a6ec2b89034c7a7202eb5c5c56 *NEWS.md
 80c68b6d7d421d336fbb9a128b8ba6d6 *R/statswales_get_dataset.R
 3f68ae25f7feab41a08a0f67da1ca4ca *R/statswales_get_metadata.R
 3c8fd0e48206bb3ab1a37073271dda90 *R/statswales_search.R
@@ -10,5 +10,5 @@ edfbd0b6c998f771256bf60d479da7d5 *README.md
 66492b0586326f1b9bd509f91cc2840f *man/statswales_get_metadata.Rd
 bfd2f19287f08f04271d63dd7879c743 *man/statswales_search.Rd
 2432fad68c8ca7dc135c1948881a80f6 *tests/testthat.R
-c50579bc3299b27b5b92f3fb4deab75a *tests/testthat/test-get-data.R
-225a03e0678f9f48a5d40dbbcdde0253 *tests/testthat/test-search.R
+e6286358e5eb024178a1b9b619e9e4d6 *tests/testthat/test-get-data.R
+75d34a2118b7ee54fe17495657febe85 *tests/testthat/test-search.R
