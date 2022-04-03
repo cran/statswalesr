@@ -4,6 +4,8 @@
 #' \href{https://statswales.gov.wales}{StatsWales} using a dataset id.
 #'
 #' @param id A dataset id as a string
+#' @param language A string. Returns the metadata in either English ('english') or Welsh ('welsh').
+#' The default is English.
 #' @return If the dataset id is valid, the output will be
 #'     the requested metadata in a dataframe. If the id is not
 #'     valid, the function will return an HTTP error.
@@ -12,10 +14,17 @@
 #'
 #'
 #' @export
-statswales_get_metadata <- function(id) {
+statswales_get_metadata <- function(id, language = 'english') {
 
+  # Check for a valid id string
   stopifnot("Dataset id should be a single value" = length(id) == 1,
             "Dataset id must be a string" = is.character(id))
+
+  # Check for valid language setting
+  stopifnot(
+    'Please set the language parameter to "english" or "welsh"' = language %in% c("english", "welsh"),
+    'Please choose one language per download.' = length(language) == 1
+  )
 
   # Check for internet connection --------------------------------------------
 
@@ -25,8 +34,16 @@ statswales_get_metadata <- function(id) {
   }
 
   # Define url containing metadata in JSON format --------------------------
-  url <- paste0("http://open.statswales.gov.wales/en-gb/discover/metadata?$filter=Dataset%20eq%20%27",
-                tolower(id), "%27")
+  if (language == 'english') {
+    url <- paste0("http://open.statswales.gov.wales/en-gb/discover/metadata?$filter=Dataset%20eq%20%27",
+                  tolower(id), "%27")
+  } else if (language == 'welsh') {
+    url <- paste0("http://agored.statscymru.llyw.cymru/cy-gb/discover/metadata?$filter=Dataset%20eq%20%27",
+                  tolower(id), "%27")
+  } else {
+    message('Invalid language specified. Please set the language parameter to "english" or "welsh".')
+    return(NULL)
+  }
 
   # Extract metadata list ----------------------------------------------------
   ua <- httr::user_agent("https://github.com/jamie-ralph/statswalesr")
@@ -54,6 +71,12 @@ statswales_get_metadata <- function(id) {
 
     return(NULL)
 
+  }
+
+  # Exit function if JSON data is not returned -----------------------------
+  if (httr::http_type(request) != "application/json") {
+    message("JSON data was not returned. Check your dataset id for typos. If your dataset id is correct, the API might be unavailable.")
+    return(NULL)
   }
 
   # Extract data from request object

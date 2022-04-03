@@ -7,6 +7,8 @@
 #'
 #' @param id A dataset id. Must be a single string.
 #' @param print_progress logical. Should progress be printed in the console?
+#' @param language A string. Returns the dataset in either English ('english') or Welsh ('welsh').
+#' The default is English.
 #' @return If the dataset id is valid, the function will return the requested
 #' dataset in a dataframe. If the id is not valid, the function will return
 #' an error.
@@ -17,11 +19,18 @@
 #' @importFrom rlang .data
 #' @export
 
-statswales_get_dataset <- function(id, print_progress = FALSE) {
+statswales_get_dataset <- function(id, print_progress = FALSE, language='english') {
 
+  # Check for a valid id string
   stopifnot('Dataset id must be a string'       = is.character(id),
             'Dataset id should be a single value' = length(id) == 1
   )
+
+  # Check for valid language setting
+  stopifnot(
+    'Please set the language parameter to "english" or "welsh"' = language %in% c("english", "welsh"),
+    'Please choose one language per download.' = length(language) == 1
+    )
 
   # Check for internet connection --------------------------------------------
 
@@ -32,7 +41,20 @@ statswales_get_dataset <- function(id, print_progress = FALSE) {
 
   # Define dataset URL --------------------------------------------------------
 
-  url <- paste0("http://open.statswales.gov.wales/en-gb/dataset/", tolower(id))
+  if (language == 'english') {
+
+    url <- paste0("http://open.statswales.gov.wales/en-gb/dataset/", tolower(id))
+
+  } else if(language == 'welsh') {
+
+    url <- paste0("http://agored.statscymru.llyw.cymru/cy-gb/dataset/", tolower(id))
+
+  } else {
+    message('Invalid language specified. Please set the language parameter to "english" or "welsh".')
+    return(NULL)
+  }
+
+
 
   # Define user agent ----------------------------------------------------
 
@@ -56,13 +78,15 @@ statswales_get_dataset <- function(id, print_progress = FALSE) {
 
   # Exit function if http error returned - else download data ----
   if (httr::http_error(request)) {
-
     message("Dataset was not found. Check your dataset id for typos. If your dataset id is correct, the API might be unavailable.")
-
     return(NULL)
-
   }
-  else {
+
+  # Exit function if JSON data is not returned -----------------------------
+  if (httr::http_type(request) != "application/json") {
+    message("JSON data was not returned. Check your dataset id for typos. If your dataset id is correct, the API might be unavailable.")
+    return(NULL)
+  } else {
     message("Downloading StatsWales dataset...")
   }
 

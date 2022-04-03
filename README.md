@@ -4,11 +4,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/statswalesr)](https://cran.r-project.org/package=statswalesr)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/jamie-ralph/statswalesr?branch=master&svg=true)](https://ci.appveyor.com/project/jamie-ralph/statswalesr)
-[![Travis build
-status](https://travis-ci.org/jamie-ralph/statswalesr.svg?branch=master)](https://travis-ci.org/jamie-ralph/statswalesr)
-
+[![R-CMD-check](https://github.com/jamie-ralph/statswalesr/workflows/R-CMD-check/badge.svg)](https://github.com/jamie-ralph/statswalesr/actions)
 <!-- badges: end -->
 
 statswalesr is a package for downloading datasets and their associated
@@ -32,7 +28,7 @@ You can install the development version of statswalesr from GitHub with:
 devtools::install_github("jamie-ralph/statswalesr")
 ```
 
-## Example
+## Usage
 
 The code below extracts data about [aircraft movement at Cardiff
 airport](https://statswales.gov.wales/Catalogue/Transport/Air/aircraftmovementsatcardiffairport-by-movementtype-year)
@@ -41,41 +37,32 @@ and the associated metadata.
 ``` r
 library(statswalesr)
 
-metadata <- statswalesr::statswales_get_metadata("tran0003")
+metadata <- statswales_get_metadata("tran0003")
 
-df <- statswalesr::statswales_get_dataset("tran0003")
+df <- statswales_get_dataset("tran0003")
 ```
 
-``` r
-str(df)
-```
-
-    ## 'data.frame':    182 obs. of  10 variables:
-    ##  $ Data                      : chr  "0" "0" "0" "0" ...
-    ##  $ MovementType_Code         : chr  "29" "29" "29" "29" ...
-    ##  $ MovementType_ItemName_ENG : chr  "Business Aviation" "Business Aviation" "Business Aviation" "Business Aviation" ...
-    ##  $ MovementType_SortOrder    : chr  "29" "29" "29" "29" ...
-    ##  $ MovementType_Hierarchy    : chr  "11" "11" "11" "11" ...
-    ##  $ MovementType_ItemNotes_ENG: chr  "" "" "" "" ...
-    ##  $ Year_Code                 : chr  "2015" "2010" "2011" "2016" ...
-    ##  $ Year_ItemName_ENG         : chr  "2015" "2010" "2011" "2016" ...
-    ##  $ Year_SortOrder            : chr  "26" "21" "22" "27" ...
-    ##  $ PartitionKey              : chr  "0" "0" "0" "0" ...
-
-You can also search for datasets based on key terms. For example, if I
-wanted data on farming or agriculture I could do the following:
+You can also search for datasets based on key terms. For example, to
+search for datasets related to farming and agriculture:
 
 ``` r
 library(dplyr)
 
 farming_datasets <- statswales_search(c("farm*", "agri*"))
-```
 
-``` r
 glimpse(farming_datasets)
 ```
 
     ## Rows: 29
     ## Columns: 2
-    ## $ Description_ENG <chr> "Children's services: Welfare/health summary", "Chi...
-    ## $ Dataset         <chr> "care0021", "care0022", "agri0200", "agri0201", "ag...
+    ## $ Description_ENG <chr> "Children's services: Welfare/health summary", "Childr~
+    ## $ Dataset         <chr> "care0021", "care0022", "agri0200", "agri0201", "agri0~
+
+## Welsh language
+
+All statswalesr functions support Welsh language downloads using the
+**language** argument:
+
+``` r
+welsh_df <- statswales_get_dataset("tran0003", language = "welsh")
+```

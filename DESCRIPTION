@@ -1,7 +1,7 @@
 Package: statswalesr
 Type: Package
 Title: Easily Extract Data from 'StatsWales'
-Version: 0.1.4
+Version: 0.2.0
 Authors@R: person(
     "Jamie", "Ralph", email = "jamesryanralph@outlook.com",
     role = c("aut", "cre")
@@ -16,8 +16,8 @@ Imports: jsonlite, httr, curl, dplyr, rlang
 RoxygenNote: 7.1.1
 Suggests: testthat
 NeedsCompilation: no
-Packaged: 2021-07-14 12:14:22 UTC; james
+Packaged: 2022-04-03 14:12:21 UTC; james
 Author: Jamie Ralph [aut, cre]
 Maintainer: Jamie Ralph <jamesryanralph@outlook.com>
 Repository: CRAN
-Date/Publication: 2021-07-14 12:30:02 UTC
+Date/Publication: 2022-04-03 19:30:02 UTC
